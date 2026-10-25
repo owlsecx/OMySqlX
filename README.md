@@ -18,24 +18,18 @@
 
 ## 📌 Overview
 
-Offline MySQL / MariaDB configuration auditor (CIS / CWE / ATT&CK)
+OMySqlX is an offline MySQL / MariaDB configuration auditor. It faithfully parses my.cnf / my.ini option files (includes, group scoping, dash/underscore equivalence) to review bind address, TLS, auth plugins, local_infile, secure_file_priv, logging, replication/Galera, and file permissions. Findings map to CIS MySQL/MariaDB, CWE, and MITRE ATT&CK.
 
 ---
 
 ## ✨ Features
 
-- Faithful my.cnf / my.ini option-file parser ([group] scoping, !include / !includedir chains, loose- / skip- / disable- / enable- prefixes, dash-underscore equivalence, quoting & escapes, last-wins semantics, per-option file:line origin)
-- Server-group model — [mysqld] [server] [mariadb]
-- Network exposure — bind-address, skip-networking, mysqlx / admin interfaces, skip-name-resolve
-- TLS review — ssl / have_ssl, require_secure_transport, certificate material, tls_version, cipher strength
-- Authentication — mysql_native_password defaults, old_passwords, secure_auth, skip-grant-tables, validate_password / simple_password_check / cracklib
-- Dangerous features — local_infile, symbolic-links, secure_file_priv, allow-suspicious-udfs, plugin_dir
-- Logging & forensics — log_bin, general_log secrets, log-raw, error log, audit plugins, binlog encryption
-- Replication & Galera — SSL on channels, plaintext master-password / wsrep_sst_auth, info repositories
-- File-permission audit — option files, ~/.my.cnf, datadir, TLS keys, log files (--root aware)
-- CIS MySQL / MariaDB Benchmark + CWE + MITRE ATT&CK
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+- Faithful my.cnf/my.ini parser with !include chains, group scoping, loose-/skip- prefixes, and last-wins semantics
+- Network exposure: bind-address, skip-networking, mysqlx/admin interfaces, skip-name-resolve
+- TLS and authentication: require_secure_transport, certs, tls_version, native password defaults, skip-grant-tables, password validators
+- Dangerous features: local_infile, symbolic-links, secure_file_priv, suspicious UDFs, plugin_dir
+- Logging/forensics and replication/Galera (SSL channels, plaintext master-password / wsrep_sst_auth)
+- Permission audit for option files, ~/.my.cnf, datadir, TLS keys; multi-format export and CI gates
 
 ---
 
@@ -49,7 +43,10 @@ Offline MySQL / MariaDB configuration auditor (CIS / CWE / ATT&CK)
 ## 🚀 Usage
 
 ```bash
-./OMySqlX
+./OMySqlX -c /etc/mysql/my.cnf --scan
+./OMySqlX --root ./fs --flavor mariadb --sarif -o mysql.sarif --fail-on high
+./OMySqlX --demo --list-rules
+./OMySqlX --help
 ```
 
 ---
